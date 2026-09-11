@@ -5,11 +5,15 @@ steps to install it. One template, one placeholder swap per person.
 
 - **`template.html`** — the signature with `{{PLACEHOLDERS}}`. Start here.
 - **`signatures/`** — the filled versions, one file per person.
-- **`images/`** — every image the signature loads. Served publicly by GitHub Pages
-  from this repo, so a new signature needs no website deploy.
+- **`images/`** — every image the signature loads, served publicly over GitHub
+  Pages, so adding a person needs no website deploy.
 
 Live preview of any file in `signatures/`:
-`https://clubtechglobal.github.io/email-signatures/signatures/matthew-gultom.html`
+`https://bradvatne.github.io/email-signatures/signatures/matthew-gultom.html`
+
+> **Push to both remotes.** This repo lives in two places and the images are served
+> from the second one — see [Image hosting](#image-hosting). `git push origin main
+> && git push pages main`, or run `./push.sh`.
 
 ---
 
@@ -65,7 +69,7 @@ within about a minute; confirm with:
 
 ```bash
 curl -sIL -o /dev/null -w '%{http_code}\n' \
-  https://clubtechglobal.github.io/email-signatures/images/ctg_profile_jane.png
+  https://bradvatne.github.io/email-signatures/images/ctg_profile_jane.png
 ```
 
 `200` means it's live. Anything else — wait a moment and retry before installing.
@@ -129,20 +133,53 @@ backgrounds.
 
 ## Image hosting
 
-The signature loads its images over `https` from GitHub Pages:
+Mail clients can't read local files, so the images have to sit on a public URL.
+The signature loads them over `https` from GitHub Pages:
 
 ```
-https://clubtechglobal.github.io/email-signatures/images/<file>.png
+https://bradvatne.github.io/email-signatures/images/<file>.png
 ```
 
-Mail clients can't read local files, so the images must be on a public URL — this
-repo being public is what makes that work. Keep it public.
+### Why two remotes
 
-The same images are also served from the marketing site at
-`https://www.clubtechglobal.com/headshots/<file>.png`, which is where earlier
-signatures pointed. Both work. This repo is the preferred host because publishing
-a new headshot here is a `git push`, whereas the marketing site needs a full
-release plus a root-privileged activation step on the production box.
+| Remote | Repo | Role |
+|---|---|---|
+| `origin` | `clubtechglobal/email-signatures` | canonical source — where the team looks |
+| `pages` | `bradvatne/email-signatures` | publishing mirror — **serves the images** |
+
+The canonical repo *cannot* serve the images: the `clubtechglobal` org disables
+GitHub Actions org-wide, and Pages needs Actions to build, so Pages there never
+produces a build and every URL 404s. Only an org **owner** can lift that, so until
+they do, publishing goes through the mirror on Brad's account.
+
+Both repos must be **public** — Pages won't serve images publicly otherwise — and
+both must be pushed, or the mirror serves a stale headshot:
+
+```bash
+git push origin main && git push pages main   # or: ./push.sh
+```
+
+**To consolidate later**, once an org owner enables Actions for
+`clubtechglobal/email-signatures`: enable Pages on it, swap the base URL across the
+HTML, push, and confirm before telling anyone to re-paste.
+
+```bash
+grep -rl 'bradvatne.github.io' . \
+  | xargs sed -i '' 's|bradvatne.github.io|clubtechglobal.github.io|g'
+```
+
+Signatures already installed keep hitting the **old** URL, so keep the mirror alive
+and public after any such switch — retiring it would break every signature already
+sitting in someone's Gmail.
+
+### The marketing site is a third copy
+
+The same images are also served from
+`https://www.clubtechglobal.com/headshots/<file>.png`, which is where the earlier
+signatures pointed, and the headshots there are kept in step via the
+`ctg-branded-landing` repo. That host works fine, but it is not used here: adding
+one file to it needs a staging release, a production upload, and a root-privileged
+activation on the prod box, versus a `git push` for this repo.
 
 If you ever do point a signature at the marketing site, **use the `www.` host**.
 The bare `clubtechglobal.com/headshots/...` URL answers `308` and redirects to
