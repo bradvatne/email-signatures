@@ -187,12 +187,29 @@ The bare `clubtechglobal.com/headshots/...` URL answers `308` and redirects to
 
 ### Things not to change
 
-- **Filenames are forever.** A signature already pasted into someone's Gmail keeps
-  requesting the exact URL it was installed with. Renaming or deleting an image in
-  `images/` breaks every signature already out in the wild, including in mail
-  already sent. To change someone's photo, add a **new** file
-  (`ctg_profile_jane_v2.png`) and update their HTML — don't overwrite, since
-  Gmail's image proxy caches aggressively and may serve the old one for days.
+- **Never rename or delete an image.** A signature already pasted into someone's
+  Gmail keeps requesting the exact URL it was installed with, so removing a file
+  in `images/` breaks every signature already out in the wild — including in mail
+  already sent and sitting in recipients' inboxes.
+
+### Replacing an image in place
+
+Overwriting a file at its existing filename is the **only** way to change mail
+that is already installed or already sent, because those signatures are pinned to
+that URL. That is the right move for the shared assets — `sig_banner.png` and the
+icons — when the company artwork changes. Two rules:
+
+- **Keep the exact pixel dimensions.** `sig_banner.png` is **802 × 104**. Gmail
+  often bakes explicit `width`/`height` onto images when a signature is pasted, so
+  a replacement with a different aspect ratio renders *squashed* in every signature
+  already installed. Crop to the original ratio rather than dropping in new artwork
+  at its native size.
+- **Expect a lag.** Gmail proxies and caches images through
+  `googleusercontent.com`, so recipients and the sender may keep seeing the old
+  image for hours or days. Nothing is broken; don't re-push chasing it.
+
+For a **person's** photo, prefer a new filename (`ctg_profile_jane_v2.png`) plus an
+HTML change, so the old one keeps rendering correctly in mail already sent.
 - **Don't restructure the tables.** The nested `<table>` layout and inline styles
   are deliberate. Email clients have no reliable flexbox, grid, or stylesheet
   support, and `<div>`-based versions of this signature collapse in Outlook.
