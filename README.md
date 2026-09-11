@@ -196,5 +196,13 @@ The bare `clubtechglobal.com/headshots/...` URL answers `308` and redirects to
 - **Don't restructure the tables.** The nested `<table>` layout and inline styles
   are deliberate. Email clients have no reliable flexbox, grid, or stylesheet
   support, and `<div>`-based versions of this signature collapse in Outlook.
-- **`sig_banner.png` is 500 px wide** and sets the card's width. A different-width
-  banner will visibly mismatch the section above it.
+- **The card is pinned to 500 px**, with the two columns fixed at 240 and 260.
+  Don't remove those widths. `sig_banner.png` renders 500 px wide and sets the
+  bottom edge; without the fixed widths the top half sizes to its text, so a long
+  job title pushes it wider than the banner and the card gets a visibly ragged
+  right edge. Matthew's title did exactly that — 516 px against a 500 px banner —
+  before the widths were added.
+- **A long job title wraps to two lines.** That's the intended trade: every
+  signature stays the same width. Don't "fix" it by widening the card.
+- **Swapping `sig_banner.png` changes every signature's width.** A replacement
+  must render 500 px wide, or the fixed column widths above need to change with it.

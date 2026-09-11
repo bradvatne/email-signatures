@@ -12,6 +12,11 @@
 
   Do not change the table structure. The nested tables and inline styles are
   what keep this rendering in Outlook, which ignores stylesheets and flexbox.
+
+  The card is pinned to 500px — the rendered width of sig_banner.png — with the
+  columns fixed at 240/260. Without that, a long job title widens the top half
+  past the banner and the card gets a ragged right edge. A long title wraps onto
+  two lines instead, which is fine and keeps every signature the same size.
 -->
 <html>
 <head>
@@ -19,14 +24,15 @@
   <title>Email Signature</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
-  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; border: 1px solid #d9dfe9; border-radius: 8px; overflow: hidden;">
+  <table cellpadding="0" cellspacing="0" border="0" width="500" style="width: 500px; border-collapse: collapse; border: 1px solid #d9dfe9; border-radius: 8px; overflow: hidden;">
     <!-- Top section -->
     <tr>
       <td style="padding: 0;">
         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse;">
           <tr>
-            <!-- Left column - Profile -->
-            <td style="padding: 20px; vertical-align: top; text-align: center;">
+            <!-- Left column - Profile. Fixed width: a long job title wraps here
+                 rather than stretching the card wider than the 500px banner. -->
+            <td width="240" style="width: 240px; padding: 20px; vertical-align: top; text-align: center;">
               <img src="https://bradvatne.github.io/email-signatures/images/{{HEADSHOT_FILE}}" alt="{{FULL_NAME}}" width="100" height="100" style="border-radius: 60px; border: 0;">
 
               <p style="margin: 15px 0 5px 0; font-size: 18px; font-weight: bold; color: #211f54;">{{FULL_NAME}}</p>
@@ -34,7 +40,7 @@
             </td>
 
             <!-- Right column - Contact info -->
-            <td style="padding: 20px; vertical-align: top; border-left: 1px solid #d9dfe9;">
+            <td width="260" style="width: 260px; padding: 20px; vertical-align: top; border-left: 1px solid #d9dfe9;">
               <p style="margin: 30px 0 20px 0; font-size: 28px; font-weight: bold; color: #211f54;">Clubtech</p>
 
               <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
